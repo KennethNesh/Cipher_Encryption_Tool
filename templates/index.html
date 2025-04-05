@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Cipher Web App</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-gray-100 min-h-screen py-10 px-4">
+  <div class="max-w-3xl mx-auto bg-gray-800 p-6 rounded-xl shadow-lg">
+    <h1 class="text-3xl font-bold text-center text-pink-400 mb-6">🔐 Cipher Encryption Tool</h1>
+
+    <form method="POST" class="space-y-4">
+      <div>
+        <label for="text" class="block font-medium text-pink-300">Enter Text:</label>
+        <textarea id="text" name="text" required rows="3" class="w-full p-3 rounded bg-gray-700 border border-gray-600 text-white">{{ request.form.get('text', '') }}</textarea>
+      </div>
+
+      <div>
+        <label for="cipher" class="block font-medium text-pink-300">Select Cipher:</label>
+        <select name="cipher" id="cipher" required class="w-full p-2 rounded bg-gray-700 border border-gray-600 text-white">
+          {% for name in cipher_functions %}
+            <option value="{{ name }}" {% if request.form.get('cipher') == name %}selected{% endif %}>{{ name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      {% if show_key %}
+      <div>
+        <label for="key" class="block font-medium text-pink-300">Key:</label>
+        <input type="text" name="key" id="key" class="w-full p-2 rounded bg-gray-700 border border-gray-600 text-white" value="{{ request.form.get('key', '') }}">
+      </div>
+      {% endif %}
+
+      <div class="flex gap-4">
+        <label class="inline-flex items-center text-white">
+          <input type="radio" name="mode" value="encrypt" {% if request.form.get('mode') != 'decrypt' %}checked{% endif %} class="mr-2"> Encrypt
+        </label>
+        <label class="inline-flex items-center text-white">
+          <input type="radio" name="mode" value="decrypt" {% if request.form.get('mode') == 'decrypt' %}checked{% endif %} class="mr-2"> Decrypt
+        </label>
+      </div>
+
+      <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-6 rounded-lg transition-all shadow">
+        🚀 Run Cipher
+      </button>
+    </form>
+
+    {% if result %}
+    <div class="mt-6">
+      <h2 class="text-xl font-semibold text-emerald-400 mb-2">🔓 Result:</h2>
+      <div class="bg-gray-700 text-white p-4 rounded-lg border border-pink-500 shadow-inner whitespace-pre-wrap">{{ result }}</div>
+    </div>
+    {% if cipher_description %}
+    <div class="alert alert-info mt-3" role="alert">
+      <strong>Description:</strong> {{ cipher_description }}
+    </div>
+    {% endif %}
+    
+    <form method="POST" action="/download" class="mt-6">
+      <input type="hidden" name="cipher" value="{{ request.form.get('cipher', '') }}">
+      <input type="hidden" name="text" value="{{ request.form.get('text', '') }}">
+      <input type="hidden" name="key" value="{{ request.form.get('key', '') }}">
+      <input type="hidden" name="mode" value="{{ request.form.get('mode', '') }}">
+      <input type="hidden" name="result" value="{{ result }}">
+      <input type="hidden" name="steps" value="{{ '\n'.join(steps) }}">
+
+      <button type="submit" class="bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 text-white font-bold py-2 px-6 rounded-xl shadow-lg transition-all transform hover:scale-105">
+        📄 Download Result
+      </button>
+    </form>
+    {% endif %}
+
+    {% if steps %}
+    <div class="mt-8">
+      <button onclick="toggleSteps()" class="bg-teal-600 hover:bg-teal-700 text-white font-semibold py-2 px-4 rounded-md shadow transition">
+        🔍 Show/Hide Steps
+      </button>
+      <div id="steps-container" class="mt-4 bg-gray-900 text-white p-4 rounded-lg shadow hidden">
+        <h3 class="text-lg font-semibold mb-2">Transformation Steps:</h3>
+        <ul class="list-disc list-inside space-y-1">
+          {% for step in steps %}
+            <li>{{ step }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+
+    <script>
+      function toggleSteps() {
+        const el = document.getElementById("steps-container");
+        el.classList.toggle("hidden");
+      }
+    </script>
+    {% endif %}
+  </div>
+</body>
+</html>
