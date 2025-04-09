@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Custom Cipher Builder</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-gray-100 min-h-screen pb-10 px-4">
+  <!-- 🌟 Top Navbar -->
+  <nav class="bg-gray-800 shadow-lg py-4 px-6 flex justify-between items-center mb-8">
+    <h1 class="text-2xl font-bold text-pink-400">🔐 Cipher Lab</h1>
+    <div class="space-x-4">
+      <a href="/" class="text-sm font-medium bg-pink-600 hover:bg-pink-500 text-white py-2 px-4 rounded transition">🏠 Home</a>
+      <a href="/custom" class="text-sm font-medium bg-gray-700 hover:bg-gray-600 text-white py-2 px-4 rounded transition">🧪 Custom Cipher</a>
+    </div>
+  </nav>
+
+  <div class="max-w-3xl mx-auto bg-gray-800 p-6 rounded-xl shadow-lg">
+    <h1 class="text-3xl font-bold text-center text-pink-400 mb-6">🧬 Create Your Own Cipher</h1>
+
+    <form method="POST" class="space-y-4">
+      <div>
+        <label for="text" class="block font-medium text-pink-300">Enter Text:</label>
+        <textarea id="text" name="text" required rows="3" class="w-full p-3 rounded bg-gray-700 border border-gray-600 text-white">{{ request.form.get('text', '') }}</textarea>
+      </div>
+
+      <div>
+        <label for="rules" class="block font-medium text-pink-300">Substitution Rules (e.g. A=1,B=2):</label>
+        <input type="text" name="rules" id="rules" class="w-full p-2 rounded bg-gray-700 border border-gray-600 text-white" value="{{ request.form.get('rules', '') }}">
+      </div>
+
+      <div>
+        <label for="encoding" class="block font-medium text-pink-300">Encoding (e.g. base64, reverse):</label>
+        <input type="text" name="encoding" id="encoding" class="w-full p-2 rounded bg-gray-700 border border-gray-600 text-white" value="{{ request.form.get('encoding', '') }}">
+      </div>
+
+      <div>
+        <label for="transposition" class="block font-medium text-pink-300">Transposition (e.g. reverse, even-odd swap):</label>
+        <input type="text" name="transposition" id="transposition" class="w-full p-2 rounded bg-gray-700 border border-gray-600 text-white" value="{{ request.form.get('transposition', '') }}">
+      </div>
+
+      <div>
+        <label for="equation" class="block font-medium text-pink-300">Equation Logic (e.g. ord(c)+1):</label>
+        <input type="text" name="equation" id="equation" class="w-full p-2 rounded bg-gray-700 border border-gray-600 text-white" value="{{ request.form.get('equation', '') }}">
+      </div>
+
+      <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-6 rounded-lg transition-all shadow">
+        🔧 Apply Custom Cipher
+      </button>
+    </form>
+
+    {% if result %}
+    <div class="mt-6">
+      <h2 class="text-xl font-semibold text-emerald-400 mb-2">🔓 Result:</h2>
+      <div class="bg-gray-700 text-white p-4 rounded-lg border border-pink-500 shadow-inner whitespace-pre-wrap">{{ result }}</div>
+    </div>
+
+    {% if steps %}
+    <div class="mt-6">
+      <h3 class="text-lg font-semibold text-cyan-300 mb-2">🧪 Steps:</h3>
+      <ul class="list-disc list-inside space-y-1">
+        {% for step in steps %}
+          <li>{{ step }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+    {% endif %}
+  </div>
+</body>
+</html>

@@ -5,7 +5,16 @@
   <title>Cipher Web App</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-900 text-gray-100 min-h-screen py-10 px-4">
+<body class="bg-gray-900 text-gray-100 min-h-screen pb-10 px-4">
+  <!-- 🌟 Top Navbar -->
+  <nav class="bg-gray-800 shadow-lg py-4 px-6 flex justify-between items-center mb-8">
+    <h1 class="text-2xl font-bold text-pink-400">🔐 Cipher Lab</h1>
+    <div class="space-x-4">
+      <a href="/" class="text-sm font-medium bg-pink-600 hover:bg-pink-500 text-white py-2 px-4 rounded transition">🏠 Home</a>
+      <a href="/custom" class="text-sm font-medium bg-gray-700 hover:bg-gray-600 text-white py-2 px-4 rounded transition">🧪 Custom Cipher</a>
+    </div>
+  </nav>
+
   <div class="max-w-3xl mx-auto bg-gray-800 p-6 rounded-xl shadow-lg">
     <h1 class="text-3xl font-bold text-center text-pink-400 mb-6">🔐 Cipher Encryption Tool</h1>
 
@@ -55,7 +64,7 @@
       <strong>Description:</strong> {{ cipher_description }}
     </div>
     {% endif %}
-    
+
     <form method="POST" action="/download" class="mt-6">
       <input type="hidden" name="cipher" value="{{ request.form.get('cipher', '') }}">
       <input type="hidden" name="text" value="{{ request.form.get('text', '') }}">
